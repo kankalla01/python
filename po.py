@@ -34,27 +34,27 @@ for url in urls:
     time.sleep(10)  # Wait for the page to load
     
     try:
-        ele = driver.find_element(By.CLASS_NAME,"jobs-search__results-list")
+        element = driver.find_element(By.CLASS_NAME,"jobs-search__results-list")
 
 # Close the WebDriver
 
-        for e in ele.find_elements(By.CLASS_NAME,"base-card"):
-            str = int(e.find_element(By.TAG_NAME,"a").get_attribute('href').split("?")[0].split("-")[-1])
-            e.click()
+        for base_card in element.find_elements(By.CLASS_NAME,"base-card"):
+            job_id = int(base_card.find_element(By.TAG_NAME,"a").get_attribute('href').split("?")[0].split("-")[-1])
+            base_card.click()
             time.sleep(2)
-            k = e.find_element(By.CLASS_NAME,"base-search-card__info")
+            card_info = base_card.find_element(By.CLASS_NAME,"base-search-card__info")
             time.sleep(2)
-            li = driver.find_element(By.CLASS_NAME,"description__job-criteria-list").find_elements(By.TAG_NAME,"li")
+            job_description = driver.find_element(By.CLASS_NAME,"description__job-criteria-list").find_elements(By.TAG_NAME,"li")
             try:
-                company_name = k.find_element(By.CLASS_NAME,"base-search-card__subtitle").text.strip()
-                job_title = k.find_element(By.CLASS_NAME, "base-search-card__title").text.strip()
-                location = k.find_element(By.CLASS_NAME,  'job-search-card__location').text.strip()
-                posted_on = k.find_element(By.TAG_NAME,"time").text.strip()
-                seniority_level = li[0].find_element(By.TAG_NAME,'span').text.strip()
-                employment_type = li[1].find_element(By.TAG_NAME,'span').text.strip()
+                company_name = card_infok.find_element(By.CLASS_NAME,"base-search-card__subtitle").text.strip()
+                job_title = card_info.find_element(By.CLASS_NAME, "base-search-card__title").text.strip()
+                location = card_info.find_element(By.CLASS_NAME,  'job-search-card__location').text.strip()
+                posted_on = card_info.find_element(By.TAG_NAME,"time").text.strip()
+                seniority_level = job_description[0].find_element(By.TAG_NAME,'span').text.strip()
+                employment_type = job_description[1].find_element(By.TAG_NAME,'span').text.strip()
                 job_info = {
                 "company_name": company_name,
-                "linkedin_job_id": str,
+                "linkedin_job_id": job_id,
                 "job_title": job_title,
                 "location": location,
                 "posted_on": posted_on,
@@ -63,9 +63,7 @@ for url in urls:
                 "employment_type": employment_type if employment_type else "null"    
              }
                 jobs.append(job_info)
-                if(len(jobs)==50):
-                    break
-            
+                
             
             
             except Exception as e:
